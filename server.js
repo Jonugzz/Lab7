@@ -2,6 +2,8 @@ let express = require("express");
 let morgan = require("morgan");
 let bodyParser = require("body-parser");
 let uuid = require("uuid");
+let { Posts } = require("./postModel");
+const mongoose = require('mongoose');
 
 let app = express();
 let jsonParser = bodyParser.json();
@@ -46,7 +48,13 @@ let post = [{
 			
 
 app.get("/bookmarks", (req,res,next) => {
-	return res.status(200).json(post);
+	console.log("Getting all posts");
+	
+	Posts
+		.getAllPosts()
+		.then( result => {
+			return res.status(200).json( result );
+		});
 });
 
 app.get("/bookmark", (req,res,next) => {
@@ -57,18 +65,17 @@ app.get("/bookmark", (req,res,next) => {
 		return res.status(406).json({message : "Missing title field in params", status : 406});
 	}
 	
-	for (let i = 0; i < post.length; i++) {
-		if (a == post[i].title){
-			return res.status(200).json({message : "Post found", status : 200, post : post[i] });
-		}
-	}
 	
-	res.statusMessage = "Title not found in the list.";
-
-	return res.status( 404 ).json({
-		message : "Title not found in the list.",
-		status : 404
-	});
+	Posts
+		.getPostsBy( a )
+		.then( result => {
+			return res.status(201).json( result );
+		})
+		.catch( err => {
+			res.statusMessage = "Something went wrong with the DB. Try again later";
+			return res.status(500).end();
+		});
+	
 
 });
 
@@ -86,31 +93,34 @@ app.post("/bookmarks", jsonParser, (req,res,next) => {
 	let newPost = {
 				id : uuid.v4(),
 				title: title,
-				desc: desc,
+				description: desc,
 				url: u,
 				rating: rating
 	};
 	
-	post.push(newPost);
-	
-	return res.status(201).json({message : "Post added", status : 201, post : newPost });
+	Posts
+		.createPost( newPost )
+		.then( result => {
+			return res.status(201).json( result );
+		})
+		.catch( err => {
+			res.statusMessage = "Something went wrong with the DB. Try again later";
+			return res.status(500).end();
+		});
 });
 
 app.delete("/bookmark/:id", (req, res, next) => {
 	let reqID = req.params.id;
 	
-	for (let i = 0; i < post.length; i++) {
-		if (reqID == post[i].id){
-			return res.status(200).json({message : "Post deleted", status : 200 });
-		}
-	}
-	
-	res.statusMessage = "ID not found in the list.";
-
-	return res.status( 404 ).json({
-		message : "Post not found",
-		status : 404
-	});
+	Posts
+		.deletePost( reqID )
+		.then( result => {
+			return res.status(201).json( result );
+		})
+		.catch( err => {
+			res.statusMessage = "Something went wrong with the DB. Try again later";
+			return res.status(500).end();
+		});
 });
 
 app.patch("/bookmark/:id", jsonParser, (req,res,next) => {
@@ -127,26 +137,35 @@ app.patch("/bookmark/:id", jsonParser, (req,res,next) => {
 		return res.status(409).json({message : "The id sent in the params doesn't match the body id", status : 409});
 	}
 	
-	for (let i = 0; i < post.length; i++) {
-		if (rId == post[i].id){
-			let upd = post[i];
-			let keys = Object.keys(req.body);
-			keys.forEach(key => {
-				upd[key] = req.body[key];
-			});
-			post[i] = upd;
-			return res.status(202).json({message : "Post updated", status : 202, post : upd });
-		}
-	}
+	Posts
+		.modifyPost( rId, req.body )
+		.then( result => {
+			return res.status(202).json( result );
+		})
+		.catch( err => {
+			res.statusMessage = "Something went wrong with the DB. Try again later";
+			return res.status(500).end();
+		});
 	
-	res.statusMessage = "ID not found in the list.";
-
-	return res.status( 404 ).json({
-		message : "Post not found",
-		status : 404
-	});	
 });
 
 app.listen( "8080", () => {
 	console.log("App is running on port 8080");
+	
+	new Promise( (resolve, reject) => {
+		mongoose.connect( 'mongodb://localhost/bookmarksdb', { useNewUrlParser: true, useUnifiedTopology: true }, ( err ) => { 
+			if( err ){
+				reject( err );
+			}
+			else{
+				console.log("bookmarksdb connected successfully");
+				return resolve();
+			}
+		})
+	})
+	.catch( err => {
+		mongoose.disconnect();
+		console.log( err );
+	})
+	
 });
