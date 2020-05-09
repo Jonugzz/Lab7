@@ -1,7 +1,7 @@
 const API_TOKEN = '2abbf7c3-245b-404f-9473-ade729ed4653';
 
 function addPostFech( t, d, u, r ){
-    let url = 'http://localhost:8080/bookmarks';
+    let url = '/bookmarks';
 
     let data = {
         title : t,
@@ -39,7 +39,7 @@ function addPostFech( t, d, u, r ){
 
 function fetchBookmarks(){
 
-    let url = 'http://localhost:8080/bookmarks';
+    let url = '/bookmarks';
     let settings = {
         method : 'GET',
         headers : {
@@ -68,7 +68,7 @@ function fetchBookmarks(){
 }
 
 function deletePostFech( d ){
-    let url = 'http://localhost:8080/bookmark/' + `${d}`;
+    let url = '/bookmark/' + `${d}`;
 
     let settings = {
         method : 'DELETE',
@@ -96,7 +96,7 @@ function deletePostFech( d ){
 }
 
 function updatePostFech( id, ndata ){
-    let url = 'http://localhost:8080/bookmark/' + `${id}`;
+    let url = '/bookmark/' + `${id}`;
 
 
     let settings = {
@@ -127,7 +127,7 @@ function updatePostFech( id, ndata ){
 }
 
 function getPostFech( t ){
-    let url = 'http://localhost:8080/bookmark?title=' + `${t}`;
+    let url = '/bookmark?title=' + `${t}`;
 
 
     let settings = {
