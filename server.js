@@ -4,12 +4,15 @@ let bodyParser = require("body-parser");
 let uuid = require("uuid");
 let { Posts } = require("./postModel");
 const mongoose = require('mongoose');
+const {DATABASE_URL, PORT, API_TOKEN} = require('./config');
+const cors = require( './cors' );
 
 let app = express();
 let jsonParser = bodyParser.json();
 
-const apiKey = "2abbf7c3-245b-404f-9473-ade729ed4653";
+const apiKey = API_TOKEN;
 
+app.use( cors );
 app.use( express.static("public") );
 
 app.use( morgan("dev") );
@@ -149,11 +152,11 @@ app.patch("/bookmark/:id", jsonParser, (req,res,next) => {
 	
 });
 
-app.listen( "8080", () => {
+app.listen( PORT, () => {
 	console.log("App is running on port 8080");
 	
 	new Promise( (resolve, reject) => {
-		mongoose.connect( 'mongodb://localhost/bookmarksdb', { useNewUrlParser: true, useUnifiedTopology: true }, ( err ) => { 
+		mongoose.connect( DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, ( err ) => { 
 			if( err ){
 				reject( err );
 			}
@@ -169,3 +172,5 @@ app.listen( "8080", () => {
 	})
 	
 });
+
+

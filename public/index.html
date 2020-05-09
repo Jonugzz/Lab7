@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Bookmarks App</title>
+        <link href="./css/index.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+		<h1>
+		BOOKMARKS:
+		</h1>
+		<section class="listB">
+		
+		</section>
+	
+		<h3> Result: </h3>
+        <section class="results">
+
+        </section>
+        <form class="add-post-form">
+			<fieldset>
+				<legend>
+					Add a bookmark
+				</legend>
+				<label for="title">
+					Title:
+				</label>
+				<input type="text" id="titleAD" />
+				<label for="description">
+					Description:
+				</label>
+				<input type="text" id="descriptionAD" />
+				<label for="url">
+					URL:
+				</label>
+				<input type="text" id="urlAD" />
+				<label for="rating">
+					Rating:
+				</label>
+				<input type="number" id="ratingAD" />
+				<button type="submit">
+					Add 
+				</button>
+			</fieldset>
+        </form>
+		
+		<form class="delete-post-form">
+			<fieldset>
+				<legend>
+					Delete a bookmark
+				</legend>
+				<label >
+					ID:
+				</label>
+				<input type="text" id="idDel" />
+				<button type="submit">
+					Delete 
+				</button>
+			</fieldset>
+        </form>
+		
+		<form class="update-post-form">
+			<fieldset>
+				<legend>
+					Update a bookmark
+				</legend>
+				<label>
+					ID:
+				</label>
+				<input type="text" id="updateID" />
+				<label>
+					New title:
+				</label>
+				<input type="text" id="titleUP" />
+				<label>
+					New description:
+				</label>
+				<input type="text" id="descriptionUP" />
+				<label>
+					New URL:
+				</label>
+				<input type="text" id="urlUP" />
+				<label>
+					New rating:
+				</label>
+				<input type="number" id="ratingUP" />
+				<button type="submit">
+					Update 
+				</button>
+			</fieldset>
+        </form>
+
+		<form class="getBytitle-post-form">
+			<fieldset>
+				<legend>
+				Get bookmarks by title
+				</legend>
+				<label >
+					Title:
+				</label>
+				<input type="text" id="titleGet" />
+				<button type="submit">
+					Search
+				</button>
+			</fieldset>
+        </form>
+        <script src="./js/index.js"></script>
+    </body>
+</html>
